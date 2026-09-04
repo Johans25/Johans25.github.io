@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johans Utama — AI/ML Engineering</title>
+<meta name="description" content="Johans Utama — AI & Machine Learning student, NUIST. Projects in graph algorithms, computer vision, and NLP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171c;
+    --ink-2:#1c2028;
+    --paper:#ece9e2;
+    --paper-2:#dfdbd1;
+    --text-dark:#1b1d22;
+    --text-mute:#5a5d63;
+    --text-light:#e9e7e0;
+    --text-light-mute:#a3a7ae;
+    --amber:#e2a13a;
+    --teal:#4fb0a5;
+    --rose:#d9756b;
+    --line:#33373f;
+    --line-light:#c9c4b8;
+    --radius:2px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--text-dark);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Space Grotesk',sans-serif;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(20,23,28,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1120px;margin:0 auto;padding:18px 32px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  @media(max-width:640px){.nav-inner{padding:16px 20px;}}
+  .nav-logo{
+    font-family:'JetBrains Mono',monospace;color:var(--text-light);
+    font-size:14px;font-weight:500;letter-spacing:0.02em;
+  }
+  .nav-logo span{color:var(--amber);}
+  .nav-links{display:flex;gap:28px;}
+  @media(max-width:640px){.nav-links{gap:16px;}}
+  .nav-links a{
+    color:var(--text-light-mute);font-size:13px;font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.03em;transition:color 0.2s;
+  }
+  .nav-links a:hover{color:var(--amber);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--ink);
+    color:var(--text-light);
+    padding:150px 0 90px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-inner{
+    max-width:1120px;margin:0 auto;padding:0 32px;
+    display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;
+    position:relative;z-index:2;
+  }
+  @media(max-width:900px){.hero-inner{grid-template-columns:1fr;}}
+  @media(max-width:640px){.hero{padding:120px 0 60px;}}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--teal);
+    letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{
+    content:'';width:7px;height:7px;background:var(--teal);border-radius:50%;
+    display:inline-block;
+  }
+  .hero h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(34px,5vw,54px);
+    font-weight:600;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:normal;color:var(--amber);
+  }
+  .hero p.lede{
+    font-size:16.5px;color:var(--text-light-mute);max-width:480px;margin-bottom:32px;
+  }
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    padding:13px 22px;border-radius:var(--radius);
+    display:inline-flex;align-items:center;gap:8px;
+    transition:all 0.2s;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--amber);color:var(--ink);font-weight:600;}
+  .btn-primary:hover{background:#eeb659;}
+  .btn-ghost{border:1px solid var(--line);color:var(--text-light);}
+  .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+
+  /* network graph signature */
+  .graph-wrap{position:relative;height:340px;}
+  .graph-wrap svg{width:100%;height:100%;}
+  .node-label{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:var(--text-light-mute);
+  }
+  .node-label-hi{fill:var(--amber);font-weight:600;}
+
+  .hero-stats{
+    display:flex;gap:0;margin-top:56px;border-top:1px solid var(--line);padding-top:24px;
+    flex-wrap:wrap;
+  }
+  .stat{padding-right:40px;margin-right:40px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  @media(max-width:640px){.stat{border-right:none;margin-right:24px;padding-right:0;margin-bottom:16px;}}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;color:var(--text-light);}
+  .stat .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-light-mute);margin-top:2px;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:88px 0;}
+  @media(max-width:640px){section{padding:56px 0;}}
+  .sec-head{margin-bottom:48px;}
+  .sec-tag{
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);
+    letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;
+  }
+  .sec-title{
+    font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3vw,32px);
+    font-weight:600;letter-spacing:-0.01em;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about{background:var(--paper);}
+  .about-grid{display:grid;grid-template-columns:1.3fr 0.7fr;gap:56px;}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:32px;}}
+  .about p{font-size:15.5px;color:var(--text-mute);margin-bottom:16px;max-width:560px;}
+  .about-facts{border-left:2px solid var(--amber);padding-left:24px;}
+  .fact{margin-bottom:20px;}
+  .fact .k{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.05em;}
+  .fact .v{font-size:14.5px;font-weight:500;margin-top:3px;}
+
+  /* ---------- PROJECTS ---------- */
+  .projects{background:var(--ink);color:var(--text-light);}
+  .projects .sec-title{color:var(--text-light);}
+  .project-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
+  @media(max-width:800px){.project-grid{grid-template-columns:1fr;}}
+  .card{
+    background:var(--ink-2);padding:32px;display:flex;flex-direction:column;
+    transition:background 0.2s;
+  }
+  .card:hover{background:#20242c;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px;}
+  .card-metric{
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);
+    border:1px solid rgba(226,161,58,0.35);padding:4px 9px;border-radius:var(--radius);
+    white-space:nowrap;
+  }
+  .card h3{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;margin-bottom:10px;}
+  .card p{font-size:14px;color:var(--text-light-mute);margin-bottom:18px;flex-grow:1;}
+  .card-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+  .tag{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--teal);
+    background:rgba(79,176,165,0.1);padding:3px 8px;border-radius:var(--radius);
+  }
+  .card-link{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-light);
+    display:inline-flex;align-items:center;gap:6px;padding-top:14px;border-top:1px solid var(--line);
+  }
+  .card-link:hover{color:var(--amber);}
+  .card-link svg{width:12px;height:12px;transition:transform 0.2s;}
+  .card-link:hover svg{transform:translate(2px,-2px);}
+
+  .more-projects{margin-top:56px;}
+  .more-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-light-mute);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:18px;}
+  .more-list{display:flex;flex-direction:column;border-top:1px solid var(--line);}
+  .more-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 0;border-bottom:1px solid var(--line);gap:16px;
+  }
+  .more-row-l{display:flex;flex-direction:column;gap:3px;}
+  .more-row-name{font-size:14.5px;font-weight:500;}
+  .more-row-note{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-light-mute);}
+  .more-row a{
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);
+    white-space:nowrap;
+  }
+  .more-row a:hover{color:var(--amber);}
+
+  /* honesty note */
+  .honesty{
+    margin-top:56px;padding:20px 24px;border:1px dashed var(--line);
+    display:flex;gap:14px;align-items:flex-start;
+  }
+  .honesty-dot{
+    width:8px;height:8px;border-radius:50%;background:var(--rose);margin-top:6px;flex-shrink:0;
+  }
+  .honesty p{font-size:13.5px;color:var(--text-light-mute);line-height:1.6;}
+  .honesty strong{color:var(--text-light);}
+
+  /* ---------- PUBLICATIONS ---------- */
+  .pubs{background:var(--paper);}
+  .pub-item{
+    display:flex;gap:24px;padding:22px 0;border-bottom:1px solid var(--line-light);
+  }
+  .pub-item:first-child{border-top:1px solid var(--line-light);}
+  .pub-year{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-mute);min-width:56px;flex-shrink:0;padding-top:2px;}
+  .pub-body h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;}
+  .pub-body p{font-size:13.5px;color:var(--text-mute);}
+  .pub-body a{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--teal);display:inline-block;margin-top:8px;}
+  .pub-body a:hover{color:var(--amber);}
+
+  /* ---------- SKILLS ---------- */
+  .skills{background:var(--paper-2);}
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+  @media(max-width:700px){.skills-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.skills-grid{grid-template-columns:1fr;}}
+  .skill-group .k{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-mute);
+    text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;
+  }
+  .skill-group .items{font-size:14.5px;line-height:1.9;}
+
+  /* ---------- RESUME / CONTACT ---------- */
+  .contact{background:var(--ink);color:var(--text-light);}
+  .contact-inner{
+    display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;
+  }
+  @media(max-width:800px){.contact-inner{grid-template-columns:1fr;}}
+  .contact h2{
+    font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,4vw,38px);
+    font-weight:600;line-height:1.15;margin-bottom:18px;letter-spacing:-0.01em;
+  }
+  .contact p{color:var(--text-light-mute);font-size:15px;margin-bottom:28px;max-width:440px;}
+  .contact-links{display:flex;gap:14px;flex-wrap:wrap;}
+  .resume-card{
+    border:1px solid var(--line);padding:28px;background:var(--ink-2);
+  }
+  .resume-card .rc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+  .resume-card .rc-name{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-light-mute);}
+  .resume-card .rc-dot{width:7px;height:7px;background:var(--teal);border-radius:50%;}
+  .resume-embed{
+    width:100%;height:260px;border:1px solid var(--line);background:#0f1114;
+    margin-bottom:16px;
+  }
+  .resume-embed iframe{width:100%;height:100%;border:none;}
+
+  footer{
+    background:var(--ink);border-top:1px solid var(--line);padding:28px 0;
+    color:var(--text-light-mute);font-family:'JetBrains Mono',monospace;font-size:12px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;animation:none !important;}
+  }
+
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Johans<span> Utama</div>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#publications">Publications</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Nanjing, China · Open to internships</div>
+      <h1>Building systems that find <em>structure</em> in messy real-world data.</h1>
+      <p class="lede">AI engineering student at NUIST, working across graph algorithms, computer vision, and NLP.</p>
+      <div class="hero-cta">
+        <a href="#work" class="btn btn-primary">View projects →</a>
+        <a href="resume.pdf" target="_blank" class="btn btn-ghost">Download resume</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">4.19<span style="font-size:15px;color:var(--text-light-mute)"> / 5.00</span></div><div class="lbl">GPA</div></div>
+        <div class="stat"><div class="num">8</div><div class="lbl">Projects shipped</div></div>
+        <div class="stat"><div class="num">3</div><div class="lbl">Languages</div></div>
+      </div>
+    </div>
+    <div class="graph-wrap">
+      <svg viewBox="0 0 380 340" fill="none">
+        <!-- edges -->
+        <g stroke="#33373f" stroke-width="1">
+          <line x1="190" y1="60" x2="90" y2="140"/>
+          <line x1="190" y1="60" x2="270" y2="130"/>
+          <line x1="190" y1="60" x2="190" y2="170"/>
+          <line x1="90" y1="140" x2="60" y2="230"/>
+          <line x1="90" y1="140" x2="150" y2="230"/>
+          <line x1="270" y1="130" x2="300" y2="220"/>
+          <line x1="190" y1="170" x2="150" y2="230"/>
+          <line x1="190" y1="170" x2="240" y2="250"/>
+          <line x1="150" y1="230" x2="130" y2="300"/>
+          <line x1="240" y1="250" x2="240" y2="300"/>
+        </g>
+        <!-- nodes -->
+        <circle cx="190" cy="60" r="6" fill="#e2a13a"/>
+        <circle cx="90" cy="140" r="4.5" fill="#4fb0a5"/>
+        <circle cx="270" cy="130" r="4.5" fill="#4fb0a5"/>
+        <circle cx="190" cy="170" r="5" fill="#e2a13a"/>
+        <circle cx="60" cy="230" r="4" fill="#5a5d63"/>
+        <circle cx="150" cy="230" r="4.5" fill="#4fb0a5"/>
+        <circle cx="300" cy="220" r="4" fill="#5a5d63"/>
+        <circle cx="240" cy="250" r="4.5" fill="#4fb0a5"/>
+        <circle cx="130" cy="300" r="3.5" fill="#5a5d63"/>
+        <circle cx="240" cy="300" r="3.5" fill="#5a5d63"/>
+        <!-- labels -->
+        <text x="200" y="55" class="node-label node-label-hi">dblp-community</text>
+        <text x="20" y="128" class="node-label">influence-max</text>
+        <text x="280" y="118" class="node-label">retrieval-engine</text>
+        <text x="200" y="185" class="node-label node-label-hi">trash-yolov8</text>
+        <text x="20" y="248" class="node-label">meal-rec</text>
+        <text x="250" y="212" class="node-label">t5-style</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ================= ABOUT ================= -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="sec-tag">About</div>
+      <h2 class="sec-title" style="margin-bottom:20px;">AI engineering, grounded in verifiable results</h2>
+      <p>I'm a third-year Bachelor of Engineering student in Artificial Intelligence at Nanjing University of Information Science and Technology, working across computer vision, NLP, and graph/network algorithms.</p>
+      <p>My approach: build it from scratch when the point is understanding the algorithm, report metrics exactly as computed, and be explicit about what a model does and doesn't do well. Several of the projects here document real limitations alongside real results — that trade-off is part of the work.</p>
+      <p>Currently looking for AI/ML internship opportunities in China and internationally.</p>
+    </div>
+    <div class="about-facts">
+      <div class="fact">
+        <div class="k">Education</div>
+        <div class="v">B.Eng. Artificial Intelligence, NUIST <br> Sep 2023 – Jun 2027</div>
+      </div>
+      <div class="fact">
+        <div class="k">Recognition</div>
+        <div class="v">Jiangsu Government Excellent International Student Scholarship <br> NUIST First-Class Scholarship</div>
+      </div>
+      <div class="fact">
+        <div class="k">Languages</div>
+        <div class="v">Indonesian (native) <br> English (IELTS 7.0) <br> Chinese (HSK 4)</div>
+      </div>
+      <div class="fact">
+        <div class="k">Based in</div>
+        <div class="v">Nanjing, Jiangsu, China</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="projects" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Selected work</div>
+      <h2 class="sec-title">Projects</h2>
+    </div>
+
+    <div class="project-grid">
+
+      <!-- Card 1: DBLP -->
+      <div class="card">
+        <div class="card-top">
+          <h3>DBLP Community Detection</h3>
+          <span class="card-metric">Q&nbsp;=&nbsp;0.950</span>
+        </div>
+        <p>From-scratch Louvain (Fast Unfolding) implementation over AAAI co-authorship networks, 2018–2023. Tracks community evolution year over year, including a documented 2019 outlier explained by AAAI's real record submission surge that year.</p>
+        <div class="card-tags">
+          <span class="tag">Graph algorithms</span>
+          <span class="tag">NetworkX</span>
+          <span class="tag">Built from scratch</span>
+        </div>
+        <a class="card-link" href="https://github.com/Johans25/dblp-community-detection" target="_blank">
+          View repository
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 2: Trash Detection -->
+      <div class="card">
+        <div class="card-top">
+          <h3>Urban Waste Detection (YOLOv8)</h3>
+          <span class="card-metric">mAP50&nbsp;0.545</span>
+        </div>
+        <p>Single-class object detector trained on street-level imagery to identify litter in cluttered urban scenes. 300-epoch training run, real precision/recall trade-off documented rather than smoothed over.</p>
+        <div class="card-tags">
+          <span class="tag">Computer vision</span>
+          <span class="tag">YOLOv8</span>
+          <span class="tag">OpenCV</span>
+        </div>
+        <a class="card-link" href="https://github.com/Johans25/trash-detection-yolov8" target="_blank">
+          View repository
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 3: Influence Max -->
+      <div class="card">
+        <div class="card-top">
+          <h3>Influence Maximization</h3>
+          <span class="card-metric">4x&nbsp;faster</span>
+        </div>
+        <p>Greedy and CELF seed-selection algorithms under the Independent Cascade model, implemented from scratch. CELF matches Greedy's spread (99%) at roughly a quarter of the runtime — the textbook-correct result.</p>
+        <div class="card-tags">
+          <span class="tag">Algorithms</span>
+          <span class="tag">Monte Carlo simulation</span>
+          <span class="tag">NetworkX</span>
+        </div>
+        <a class="card-link" href="https://github.com/Johans25/influence-maximization" target="_blank">
+          View repository
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 4: Document Retrieval -->
+      <div class="card">
+        <div class="card-top">
+          <h3>Document Retrieval Engine</h3>
+          <span class="card-metric">MAP&nbsp;0.908</span>
+        </div>
+        <p>TF-IDF vs. BM25 ranking comparison over the 20 Newsgroups corpus, evaluated with Precision@5 and MAP. Fully reproducible — dataset loads automatically via scikit-learn, no manual download step.</p>
+        <div class="card-tags">
+          <span class="tag">Information retrieval</span>
+          <span class="tag">scikit-learn</span>
+          <span class="tag">BM25</span>
+        </div>
+        <a class="card-link" href="https://github.com/Johans25/document-retrieval-engine" target="_blank">
+          View repository
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 5: PICNN -->
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-top">
+          <h3>PICNN: Physics-Informed Downscaling</h3>
+          <span class="card-metric">−7.7%&nbsp;RMSE</span>
+        </div>
+        <p>Physics-informed CNN for ERA5 meteorological downscaling, benchmarked against a standard CNN baseline with a component-level ablation study isolating which architectural pieces actually drive the improvement (published preprint).</p>
+        <div class="card-tags">
+          <span class="tag">PyTorch</span>
+          <span class="tag">Physics-informed DL</span>
+          <span class="tag">Ablation study</span>
+        </div>
+        <a class="card-link" href="https://github.com/Johans25/picnn_downscaling" target="_blank">
+          View repository
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- More projects -->
+    <div class="more-projects">
+      <div class="more-title">More projects</div>
+      <div class="more-list">
+        <div class="more-row">
+          <div class="more-row-l">
+            <div class="more-row-name">T5 Formal–Informal Text Style Transfer</div>
+            <div class="more-row-note">Fine-tuned T5 on 12.7K parallel pairs · honest write-up of low-resource limitations</div>
+          </div>
+          <a href="https://github.com/Johans25/t5-text-style-transfer" target="_blank">repo →</a>
+        </div>
+        <div class="more-row">
+          <div class="more-row-l">
+            <div class="more-row-name">AI-Powered Meal Recommendation</div>
+            <div class="more-row-note">TF-IDF ingredient matching over a recipe corpus, served via Gradio</div>
+          </div>
+          <a href="https://github.com/Johans25/meal-recommendation" target="_blank">repo →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="honesty">
+      <div class="honesty-dot"></div>
+      <p><strong>A note on how results here are reported:</strong> every metric on this page comes from an actual run of the linked code, not a target I aimed for. Where a project has a real limitation — e.g. the T5 model's formality-transfer score — the README says so directly rather than omitting it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PUBLICATIONS ================= -->
+<section class="pubs" id="publications">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Research</div>
+      <h2 class="sec-title">Publications</h2>
+    </div>
+    <div class="pub-item">
+      <div class="pub-year mono">2026</div>
+      <div class="pub-body">
+        <h4>Deep Learning-Based Meteorological Data Downscaling: A Comparative Study with Physics-Informed CNN and a Component-Level Ablation Analysis</h4>
+        <p>Utama, J. (2026). EarthArXiv Preprint. Proposes PICNN for ERA5 temperature downscaling (7.7% RMSE improvement over CNN baseline), with a controlled ablation study isolating which architectural components actually drive the gain.</p>
+        <a href="https://doi.org/10.31223/X50N5V" target="_blank">View on EarthArXiv →</a>
+      </div>
+    </div>    
+    <div class="pub-item">
+      <div class="pub-year mono">2026</div>
+      <div class="pub-body">
+        <h4>Algorithmic Bias in Social Media Recommendation Systems: A Systematic Review of Political Filter Bubble Evidence (2019–2026)</h4>
+        <p>Utama, J. (2026). SSRN Preprint.</p>
+        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7249820" target="_blank">View on SSRN →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section class="skills" id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Toolkit</div>
+      <h2 class="sec-title">Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="k">Languages</div>
+        <div class="items">Python<br>SQL (basic)</div>
+      </div>
+      <div class="skill-group">
+        <div class="k">ML / DL</div>
+        <div class="items">PyTorch<br>Hugging Face Transformers<br>scikit-learn<br>YOLOv8</div>
+      </div>
+      <div class="skill-group">
+        <div class="k">Domains</div>
+        <div class="items">NLP<br>Computer Vision<br>Graph / Network Algorithms<br>Information Retrieval</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="wrap contact-inner">
+    <div>
+      <h2>Let's talk about an internship, a project, or a role.</h2>
+      <p>Open to internship opportunities in China and internationally. Reach out directly, or grab the resume for the full picture.</p>
+      <div class="contact-links">
+        <a href="mailto:johansutama25@gmail.com" class="btn btn-primary">Email me →</a>
+        <a href="https://github.com/Johans25" target="_blank" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+    <div class="resume-card">
+      <div class="rc-top">
+        <span class="rc-name">My Resume</span>
+        <span class="rc-dot"></span>
+      </div>
+      <div class="resume-embed">
+        <iframe src="resume.pdf" title="Johans Utama Resume"></iframe>
+      </div>
+      <a href="resume.pdf" download class="btn btn-primary" style="width:100%;justify-content:center;">Download PDF</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:10px;">
+    <span>© 2026 Johans Utama</span>
+    <span>Built with real, verifiable results.</span>
+  </div>
+</footer>
+
+</body>
+</html>
